@@ -1,5 +1,6 @@
 from os import POSIX_FADV_RANDOM
 import requests
+import re
 
 URL = 'http://econpy.pythonanywhere.com/ex/001.html'
 
@@ -10,19 +11,10 @@ if __name__ == '__main__':
     #si es exitosa se 
     if response.status_code == 200:
         #respuesta del servidor
+        #obteniendo el maquetado
         content = response.text
 
-        regex_a = '<div title="buyer-name">'
-        regex_b = '</div>'
-        
-        for line in content.split('\n'):
-            
-            if regex_a in line:
-                
-                start = line.find(regex_a) + len(regex_a)
-                end = line.find(regex_b)
+        regex = '<div title="buyer-name">(.+?)</div>'
 
-                title = line[start:end]
-
-                print(title)
-                
+        for title in re.findall(regex, content):
+            print(title)
